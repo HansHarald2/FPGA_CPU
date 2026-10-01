@@ -1,0 +1,10 @@
+# Generierte Dateien – entstehen bei jedem Build neu, gehören nicht ins Repo
+build/
+*.vcd
+*.ghw
+*.cf
+*.o
+
+# Editor / OS
+.vscode/
+.DS_Store
