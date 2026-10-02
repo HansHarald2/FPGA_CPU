@@ -2,6 +2,10 @@
 
 Ich lerne FPGA-Design mit VHDL und baue Schritt für Schritt eine komplette CPU – vom blinkenden LED bis zu Linux auf einem selbst gebauten SoC. Ziel ist tiefes Verständnis, nicht das Endergebnis.
 
+## Die CPU (M2: MiniCPU-8)
+
+![MiniCPU-8 Blockdiagramm](docs/cpu-blockdiagram.svg)
+
 ## Hardware
 
 - **Board:** iCESugar-Pro (Muse Lab)
