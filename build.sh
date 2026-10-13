@@ -7,9 +7,8 @@
 #   ./build.sh synth               # VHDL -> Netzliste (Yosys + GHDL-Plugin)
 #   ./build.sh pnr                 # Place & Route (nextpnr-ecp5)
 #   ./build.sh bit                 # Bitstream packen (ecppack)
-#   ./build.sh prog                # ins SRAM laden (weg nach Power-off)
-#   ./build.sh flash               # ins Konfig-Flash schreiben (bleibt)
-#   ./build.sh all                 # synth + pnr + bit
+#   ./build.sh prog                # Bitstream aufs Board: Datei auf das iCELink-Laufwerk kopieren
+#   ./build.sh all                # synth + pnr + bit
 #   ./build.sh clean
 #
 # Regel 4 aus dem Lern-Contract: Nichts aufs Board, was nicht in GTKWave war.
@@ -26,8 +25,9 @@ LPF=constraints/icesugar_pro.lpf   # NUR aus github.com/wuxx/icesugar-pro kopier
 # ---- Chip-Parameter (iCESugar-Pro) ------------------------------------------
 DEVICE=25k                  # LFE5U-25F
 PACKAGE=CABGA256            # BG256-Gehäuse
-# TODO: Board-Namen in der openFPGALoader-Kompatibilitätsliste verifizieren
-BOARD=icesugar_pro
+# Programmieren per Drag-and-drop: der iCELink-Debugger meldet sich als USB-Laufwerk.
+# (openFPGALoader kennt das Board nicht und fand den Debugger nicht -> nicht benutzt.)
+ICELINK="/media/$USER/iCELink"
 
 GHDL_STD=--std=08           # VHDL-2008
 
@@ -78,11 +78,10 @@ case "${1:-help}" in
     ;;
 
   prog)
-    openFPGALoader -b $BOARD "$BUILD/$TOP.bit"
-    ;;
-
-  flash)
-    openFPGALoader -b $BOARD -f "$BUILD/$TOP.bit"
+    [ -d "$ICELINK" ] || { echo "Laufwerk $ICELINK nicht gefunden – Board per USB angesteckt?"; exit 1; }
+    cp "$BUILD/$TOP.bit" "$ICELINK/"
+    sync
+    echo ">> Kopiert. Ein paar Sekunden warten, der iCELink programmiert das FPGA."
     ;;
 
   clean)
@@ -90,6 +89,6 @@ case "${1:-help}" in
     ;;
 
   *)
-    sed -n '2,17p' "$0"     # Kopfkommentar als Hilfe ausgeben
+    sed -n '2,16p' "$0"     # Kopfkommentar als Hilfe ausgeben
     ;;
 esac

@@ -20,7 +20,7 @@ Ich lerne FPGA-Design mit VHDL und baue Schritt für Schritt eine komplette CPU 
 - Yosys (mit GHDL-Plugin) – Synthese
 - nextpnr-ecp5 – Place & Route
 - ecppack (Project Trellis) – Bitstream
-- openFPGALoader – Programmieren
+- iCELink (Onboard-Debugger) – Programmieren per Drag-and-drop auf das USB-Laufwerk
 
 ## Projektstruktur
 
@@ -35,14 +35,40 @@ Ich lerne FPGA-Design mit VHDL und baue Schritt für Schritt eine komplette CPU 
 
 ## Benutzung
 
+### Einmal pro Terminal: Toolchain aktivieren
+
+```bash
+source ~/Desktop/EEProjekt/oss-cad-suite/environment
+```
+
+(Pfad dort, wo die [OSS CAD Suite](https://github.com/YosysHQ/oss-cad-suite-build/releases) entpackt wurde.)
+
+### Simulation
+
 ```bash
 ./build.sh sim <testbench>   # GHDL-Simulation -> build/<tb>.vcd
 gtkwave build/<tb>.vcd
-./build.sh all               # synth + pnr + bit
-./build.sh prog              # ins SRAM laden (weg nach Power-off)
-./build.sh flash             # ins Konfig-Flash schreiben (bleibt)
-./build.sh clean
 ```
+
+### Bauen und aufs Board laden
+
+```bash
+cd ~/Desktop/EEProjekt/FPGA_CPU/fpga-journey
+./build.sh all               # synth + pnr + bit  ->  build/top.bit
+./build.sh prog              # kopiert build/top.bit auf das iCELink-Laufwerk
+```
+
+`prog` ist dasselbe wie von Hand:
+
+```bash
+cp build/top.bit /media/$USER/iCELink/ && sync
+```
+
+Danach ein paar Sekunden warten – der iCELink programmiert das FPGA selbst. Voraussetzung: Board per USB angesteckt und das Laufwerk „iCELink“ ist eingehängt.
+
+`./build.sh clean` löscht `build/`.
+
+Hinweis: `openFPGALoader` kennt das Board nicht (`-b icesugar_pro` gibt es nicht) und fand den Debugger nicht – deshalb Drag-and-drop.
 
 Grundregel: **Simulation first** – nichts aufs FPGA, was ich nicht in GTKWave gesehen habe.
 
