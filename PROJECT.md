@@ -1,5 +1,5 @@
 # STATUS (vor jeder neuen Session aktualisieren)
-Board bestellt: ja, 01.10.2026 – iCESugar-Pro (LFE5U-25F-6BG256C), Lieferung ca. Mitte Oktober
+Board bestellt: ja, 01.10.2026 – iCESugar-Pro (LFE5U-25F-6BG256C). Board da (13.10.), Blinky-Test OK (Build + Upload siehe README).
 Assignment A gemacht: [ja/nein – Schätzung: __ LUTs / __ FFs, real: __]
 Quiz-Antworten abgegeben: [ja/nein]
 
@@ -79,6 +79,14 @@ S1  Side-Quest Musik-DSP: DDS (Phasenakkumulator; Rechteck = MSB,
   Was bricht ohne es? (Stichwort: zwei unabhängige Takte)
 - Zu verifizieren: hat die ECP5-Familie doch ein TQFP144-Package 
   (Datenblatt checken)?
+- ALU gerade in Arbeit (src/alu.vhd, Testbench sim/alu_tb.vhd noch leer).
+- SPÄTER NOCHMAL ABFRAGEN (Nutzer hat es als unklar markiert): 
+  `WIDTH - 1 downto 0` (Indexzählung ab 0), `resize` (warum, wie), 
+  Klammern bei Konvertierung vs. Slice (`std_logic_vector(...)` vs. 
+  `wide_result(...)`). Notiz: EETheorie/CPU/VHDL Knowledge/Slices, resize and conversions.md
+  — dort stehen 5 Quizfragen. Vor dem nächsten Block (reg8) kurz abfragen.
+- Idee des Nutzers (später): eigene Library/Package mit den häufigsten 
+  VHDL-Mustern (Zähler, FF-Prozess, case, Testbench-Gerüst), Buch Kap. 7.
 
 # FACHLICHER RAHMEN (schon geklärt, bitte nicht neu erklären)
 - Bitstream = Konfiguration, die Hardware WIRD, kein Programm.

@@ -3,7 +3,7 @@
 # build.sh – FPGA-Flow für das iCESugar-Pro (Lattice ECP5 LFE5U-25F-6BG256C)
 #
 # Benutzung:
-#   ./build.sh sim   <testbench>   # GHDL-Simulation -> build/<tb>.vcd -> GTKWave
+#   ./build.sh sim   <testbench>   # GHDL-Simulation -> build/<tb>.vcd -> öffnet in VS Code (WaveTrace)
 #   ./build.sh synth               # VHDL -> Netzliste (Yosys + GHDL-Plugin)
 #   ./build.sh pnr                 # Place & Route (nextpnr-ecp5)
 #   ./build.sh bit                 # Bitstream packen (ecppack)
@@ -45,9 +45,16 @@ case "${1:-help}" in
     ghdl -a $GHDL_STD --workdir="$BUILD" $(src_files) "$SIM_DIR"/*.vhd
     # -e  elaborieren: Hierarchie zusammensetzen, ausführbares Modell bauen
     ghdl -e $GHDL_STD --workdir="$BUILD" -o "$BUILD/$TB" "$TB"
-    # -r  laufen lassen und alle Signale als VCD mitschreiben
-    ghdl -r $GHDL_STD --workdir="$BUILD" "$TB" --vcd="$BUILD/$TB.vcd" --stop-time=10ms
-    echo ">> Fertig. Öffnen mit: gtkwave $BUILD/$TB.vcd"
+    # laufen lassen (das bei -e gebaute Programm) und alle Signale als VCD mitschreiben.
+    # --ieee-asserts=disable-at-0: harmlose Warnungen bei Zeit 0 (Signale noch 'U') ausblenden
+    "./$BUILD/$TB" --vcd="$BUILD/$TB.vcd" --stop-time=10ms --ieee-asserts=disable-at-0
+    # Wellenform direkt in VS Code öffnen (Extension WaveTrace zeigt .vcd an)
+    if command -v code >/dev/null; then
+        code -r "$BUILD/$TB.vcd"
+        echo ">> Fertig. $BUILD/$TB.vcd in VS Code geöffnet (WaveTrace)."
+    else
+        echo ">> Fertig. Wellenform: $BUILD/$TB.vcd"
+    fi
     ;;
 
   synth)

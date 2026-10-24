@@ -46,8 +46,8 @@ source ~/Desktop/EEProjekt/oss-cad-suite/environment
 ### Simulation
 
 ```bash
-./build.sh sim <testbench>   # GHDL-Simulation -> build/<tb>.vcd
-gtkwave build/<tb>.vcd
+./build.sh sim <testbench>   # GHDL-Simulation -> build/<tb>.vcd, öffnet sich in VS Code (WaveTrace)
+# z. B.: ./build.sh sim alu_tb
 ```
 
 ### Bauen und aufs Board laden
