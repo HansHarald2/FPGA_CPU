@@ -8,3 +8,6 @@ build/
 # Editor / OS
 .vscode/
 .DS_Store
+
+# Bücher / PDFs gehören nicht ins Repo
+*.pdf
