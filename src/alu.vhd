@@ -24,34 +24,26 @@ architecture rtl of alu is
 
 begin
 
-    
-    -- ALU operation zuerst pseudo code
-    -- a add b = wide_result
-    -- a sub b  = => .
-    -- a and b
-    -- a or b
-process (all)
-begin
-    case op is
-        when "00" => --add
-            wide_result <= resize(unsigned(a), WIDTH + 1) + resize(unsigned(b), WIDTH + 1);
-        when "01" => --sub
-            wide_result <= resize(unsigned(a), WIDTH + 1) - resize(unsigned(b), WIDTH + 1);
-        when "10" => --and
-            wide_result <= resize(unsigned(a), WIDTH + 1) and resize(unsigned(b), WIDTH + 1);
-        when "11" => --or
-            wide_result <= resize(unsigned(a), WIDTH + 1) or resize(unsigned(b), WIDTH + 1);
-        when others =>
-            wide_result <= (others => '0');
-    end case;
+    -- calculation: op picks which result goes into wide_result
+    process (all)
+    begin
+        case op is
+            when "00" => --add
+                wide_result <= resize(unsigned(a), WIDTH + 1) + resize(unsigned(b), WIDTH + 1);
+            when "01" => --sub
+                wide_result <= resize(unsigned(a), WIDTH + 1) - resize(unsigned(b), WIDTH + 1);
+            when "10" => --and
+                wide_result <= resize(unsigned(a), WIDTH + 1) and resize(unsigned(b), WIDTH + 1);
+            when "11" => --or
+                wide_result <= resize(unsigned(a), WIDTH + 1) or resize(unsigned(b), WIDTH + 1);
+            when others =>
+                wide_result <= (others => '0');
+        end case;
+    end process;
 
-end process;
-
-result <= std_logic_vector(wide_result(WIDTH - 1 downto 0));
-
-z <= '1' when wide_result(WIDTH - 1 downto 0) = 0 else '0';
-
-c <= wide_result(WIDTH);
-
+    -- split wide_result into the three outputs
+    result <= std_logic_vector(wide_result(WIDTH - 1 downto 0));
+    z      <= '1' when wide_result(WIDTH - 1 downto 0) = 0 else '0';
+    c      <= wide_result(WIDTH);
 
 end architecture;
