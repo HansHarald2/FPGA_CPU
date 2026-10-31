@@ -79,12 +79,22 @@ S1  Side-Quest Musik-DSP: DDS (Phasenakkumulator; Rechteck = MSB,
   Was bricht ohne es? (Stichwort: zwei unabhängige Takte)
 - Zu verifizieren: hat die ECP5-Familie doch ein TQFP144-Package 
   (Datenblatt checken)?
-- ALU gerade in Arbeit (src/alu.vhd, Testbench sim/alu_tb.vhd noch leer).
+- ALU FERTIG (24.10.): src/alu.vhd + sim/alu_tb.vhd, alle Tests grün, 
+  in WaveTrace angeschaut, committet.
+- NÄCHSTER BLOCK: Register (src/reg8.vhd, sim/reg8_tb.vhd – bisher nur 
+  library-Zeilen). Neu: clk/rising_edge, load enable, reset, Takt-
+  generator in der TB. Danach evtl. Primitive-Version mit TRELLIS_FF.
+- Testbench-Antworten vom 24.10. offen nachzuschärfen: Seiten im 
+  port map (`a => a`: links = Port der ALU, rechts = TB-Signal) und 
+  was ohne `wait;` passiert (Prozess startet von vorne, Simulation 
+  läuft bis --stop-time).
 - SPÄTER NOCHMAL ABFRAGEN (Nutzer hat es als unklar markiert): 
   `WIDTH - 1 downto 0` (Indexzählung ab 0), `resize` (warum, wie), 
   Klammern bei Konvertierung vs. Slice (`std_logic_vector(...)` vs. 
   `wide_result(...)`). Notiz: EETheorie/CPU/VHDL Knowledge/Slices, resize and conversions.md
-  — dort stehen 5 Quizfragen. Vor dem nächsten Block (reg8) kurz abfragen.
+  — dort stehen 5 Quizfragen. Stand 31.10.: `resize` sitzt. Noch unsicher: 
+  12 Bit = `11 downto 0` (Antwort war 12 downto 0), und Slice vs. 
+  Konvertierung. Beim nächsten Block (PC) nochmal kurz abfragen.
 - Idee des Nutzers (später): eigene Library/Package mit den häufigsten 
   VHDL-Mustern (Zähler, FF-Prozess, case, Testbench-Gerüst), Buch Kap. 7.
 
